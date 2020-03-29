@@ -2,15 +2,17 @@ package gz.radar;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RadarProxy {
+public class ClassRadar {
 
     public static class RadarConstructorMethod {
         public String accessType;
@@ -162,6 +164,128 @@ public class RadarProxy {
                 this.methods[i] = fiter.next();
                 i++;
             }
+        }
+
+        public boolean hasNativeMethod() {
+            for (RadarMethod radarMethod : methods) {
+                if (radarMethod.isNative) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public RadarMethod[] getMethods(String ...flags) {
+            Set<String> flagsSet = new HashSet<>();
+            for (int i = 0; flags != null && i < flags.length; i++) {
+                flagsSet.add(flags[i]);
+            }
+            if (flagsSet.isEmpty()) {
+                return this.methods;
+            }
+            List<RadarMethod> ret = new ArrayList<RadarMethod>();
+            for (RadarMethod radarMethod : this.methods) {
+                int accordCount = 0;
+                if (flagsSet.contains("native") && radarMethod.isNative){
+                    accordCount ++;
+                }
+                if (flagsSet.contains("public") && radarMethod.accessType.equals("public")) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("protected") && radarMethod.accessType.equals("protected")) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("private") && radarMethod.accessType.equals("private")) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("static") && radarMethod.isStatic) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("local") && radarMethod.isLocal) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("final") && radarMethod.isFinally) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains(radarMethod.methodName)) {
+                    accordCount ++;
+                }
+                if (accordCount == flagsSet.size()) {
+                    ret.add(radarMethod);
+                }
+            }
+            return ret.toArray(new RadarMethod[ret.size()]);
+        }
+
+        public RadarField[] getFields(String ...flags) {
+            Set<String> flagsSet = new HashSet<>();
+            for (int i = 0; flags != null && i < flags.length; i++) {
+                flagsSet.add(flags[i]);
+            }
+            if (flagsSet.isEmpty()) {
+                return this.fields;
+            }
+            List<RadarField> ret = new ArrayList<RadarField>();
+
+            for (RadarField radarField : this.fields) {
+                int accordCount = 0;
+                if (flagsSet.contains("public") && radarField.accessType.equals("public")) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("protected") && radarField.accessType.equals("protected")) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("private") && radarField.accessType.equals("private")) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("static") && radarField.isStatic) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("local") && radarField.isLocal) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("final") && radarField.isFinally) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains(radarField.fieldName)) {
+                    accordCount ++;
+                }
+                if (accordCount == flagsSet.size()) {
+                    ret.add(radarField);
+                }
+            }
+            return ret.toArray(new RadarField[ret.size()]);
+        }
+
+
+        public RadarConstructorMethod[] getConstructorMethods(String ...flags) {
+            Set<String> flagsSet = new HashSet<>();
+            for (int i = 0; flags != null && i < flags.length; i++) {
+                flagsSet.add(flags[i]);
+            }
+            if (flagsSet.isEmpty()) {
+                return this.constructorMethods;
+            }
+            List<RadarConstructorMethod> ret = new ArrayList<RadarConstructorMethod>();
+            int accordCount = 0;
+            for (RadarConstructorMethod radarConstructorMethod : this.constructorMethods) {
+                if (flagsSet.contains("public") && radarConstructorMethod.accessType.equals("public")) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("protected") && radarConstructorMethod.accessType.equals("protected")) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("private") && radarConstructorMethod.accessType.equals("private")) {
+                    accordCount ++;
+                }
+                if (flagsSet.contains("local") && radarConstructorMethod.isLocal) {
+                    accordCount ++;
+                }
+                if (accordCount == flagsSet.size()) {
+                    ret.add(radarConstructorMethod);
+                }
+            }
+            return ret.toArray(new RadarConstructorMethod[ret.size()]);
         }
     }
 
