@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 
 public class ClassRadar {
 
+    public static final int ANDROID_SDK_VERSION = android.os.Build.VERSION.SDK_INT;
+
     public static class RadarConstructorMethod {
         public String accessType;
         public int paramsNum;
@@ -131,6 +133,7 @@ public class ClassRadar {
 
     public static class RadarClassResult {
         public String superClassName;
+        public String[] implementsInterfaces;
         public String className;
         public RadarField[] fields;
         public RadarConstructorMethod[] constructorMethods;
@@ -184,6 +187,14 @@ public class ClassRadar {
             RadarClassResult result = new RadarClassResult();
             result.className = className;
             result.superClassName = clz.getSuperclass().getName();
+            List<String> implementsI = new ArrayList<>();
+            try {
+                Class<?>[] interfaces = clz.getInterfaces();
+                for (int i = 0; interfaces != null && i < interfaces.length; i++) {
+                    implementsI.add(interfaces[i].getName());
+                }
+            }catch (Exception e){}
+            result.implementsInterfaces = implementsI.toArray(new String[implementsI.size()]);
             Set<RadarField> radarFields = new HashSet<>();
             java.lang.reflect.Field[] declaredFields = clz.getDeclaredFields();
             if (declaredFields != null){
@@ -205,7 +216,7 @@ public class ClassRadar {
             //构造方法
             Set<RadarConstructorMethod> radarConstructorMethods = new HashSet<RadarConstructorMethod>();
             Constructor<?>[] constructors = clz.getDeclaredConstructors();
-            if (constructors != null){
+            if (constructors != null) {
                 for (int i = 0; i < constructors.length; i++) {
                     RadarConstructorMethod raderConstructorMethod = new RadarConstructorMethod(constructors[i].getModifiers(), constructors[i].toString());
                     raderConstructorMethod.isLocal = true;
@@ -355,4 +366,5 @@ public class ClassRadar {
         }
         return false;
     }
+
 }
