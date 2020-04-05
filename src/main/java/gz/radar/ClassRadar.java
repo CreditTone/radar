@@ -187,6 +187,9 @@ public class ClassRadar {
             RadarClassResult result = new RadarClassResult();
             result.className = className;
             result.superClassName = clz.getSuperclass().getName();
+            if (result.superClassName == null) {
+                result.superClassName = "unkown";
+            }
             List<String> implementsI = new ArrayList<>();
             try {
                 Class<?>[] interfaces = clz.getInterfaces();
