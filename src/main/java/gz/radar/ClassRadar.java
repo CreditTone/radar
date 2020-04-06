@@ -1,7 +1,10 @@
 package gz.radar;
 
+import android.util.Log;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -183,6 +186,45 @@ public class ClassRadar {
         if (obj == null)
             return null;
         return discoverClass(obj.getClass().getName());
+    }
+
+    private static boolean lookingSuperClass(Class clz, String superClassName) {
+        if (clz == null || clz.getName().equals("java.lang.Object")) {
+            return false;
+        }
+        if (clz.getName().equals(superClassName)) {
+            return true;
+        }
+        if (!clz.isInterface()) {
+            Class<?> superClz = clz.getSuperclass();
+            if (lookingSuperClass(superClz, superClassName)) {
+                return true;
+            }
+        }
+
+        Class<?>[] interfaces = clz.getInterfaces();
+        for (int  i = 0; interfaces != null && i < interfaces.length;  i++) {
+            if (lookingSuperClass(interfaces[i], superClassName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isSubClass(String className, String superClassName) {
+        if ("java.lang.Object".equals(superClassName)) {
+            return true;
+        }
+        if (className.equals(superClassName)) {
+            return false;
+        }
+        try{
+            Class<?> clz = Class.forName(className);
+            return lookingSuperClass(clz, superClassName);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
     
     public static RadarClassResult discoverClass(String className) {
