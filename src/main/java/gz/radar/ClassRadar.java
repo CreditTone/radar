@@ -179,7 +179,11 @@ public class ClassRadar {
         }
 
     }
-
+    public static RadarClassResult discoverObject(Object obj) {
+        if (obj == null)
+            return null;
+        return discoverClass(obj.getClass().getName());
+    }
     
     public static RadarClassResult discoverClass(String className) {
         try {
@@ -324,6 +328,46 @@ public class ClassRadar {
         return "unkown";
     }
 
+    private static String convertToFridaType(String type){
+        String fridaType = "";
+        if (type.startsWith("[]")) {
+            while (type.startsWith("[]")) {
+                fridaType += "[";
+                type = type.substring(2);
+            }
+        }
+        switch (type){
+            case "int":
+                fridaType += "I";
+                break;
+            case "boolean":
+                fridaType += "Z";
+                break;
+            case "byte":
+                fridaType += "B";
+                break;
+            case "char":
+                fridaType += "C";
+                break;
+            case "double":
+                fridaType += "D";
+                break;
+            case "float":
+                fridaType += "F";
+                break;
+            case "long":
+                fridaType += "J";
+                break;
+            case "short":
+                fridaType += "S";
+                break;
+            default:
+                fridaType += type;
+                break;
+        }
+        return fridaType;
+    }
+
     private static String[] getMethodParams(String describe) {
         Matcher matcher = Pattern.compile("[^.]+\\(([^\\)]*)\\)").matcher(describe);
         if (matcher.find()){
@@ -334,11 +378,11 @@ public class ClassRadar {
             if (paramsLine.contains(",")){
                 String[] params = paramsLine.split(",");
                 for (int j = 0; j < params.length; j++){
-                    params[j] = params[j].trim();
+                    params[j] = convertToFridaType(params[j].trim());
                 }
                 return params;
             }else{
-                return new String[]{paramsLine};
+                return new String[]{convertToFridaType(paramsLine)};
             }
         }
         return new String[0];
