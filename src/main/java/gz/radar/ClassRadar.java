@@ -212,19 +212,28 @@ public class ClassRadar {
     }
 
     public static boolean isSubClass(String className, String superClassName) {
+        if (!className.contains(".") || className.equals(superClassName)) {
+            return false;
+        }
         if ("java.lang.Object".equals(superClassName)) {
             return true;
         }
-        if (className.equals(superClassName)) {
-            return false;
-        }
+        Class<?> superClz = null;
+        Class<?> clz = null;
         try{
-            Class<?> clz = Class.forName(className);
-            return lookingSuperClass(clz, superClassName);
+            clz = Class.forName(className);
+            superClz = Class.forName(superClassName);
+            boolean isAssignableFrom = superClz.isAssignableFrom(clz);
+            if (isAssignableFrom) {
+//                Log.d("btn", "-----------------------------");
+//                Log.d("btn", "clz:" + clz.getName());
+//                Log.d("btn", "superClz:" + superClz.getName());
+            }
+            return isAssignableFrom;
         }catch (Exception e){
             e.printStackTrace();
         }
-        return false;
+        return lookingSuperClass(clz, superClassName);
     }
     
     public static RadarClassResult discoverClass(String className) {
