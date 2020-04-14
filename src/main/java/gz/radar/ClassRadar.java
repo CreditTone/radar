@@ -66,12 +66,14 @@ public class ClassRadar {
         public boolean isNative;
         public boolean isStatic;
         public boolean isFinally;
+        public boolean isAbstrat;
 
         public RadarMethod(int modifier, String describe) {
             super(modifier, describe);
             this.isNative = java.lang.reflect.Modifier.isNative(modifier);
             this.isStatic = java.lang.reflect.Modifier.isStatic(modifier);
             this.isFinally = java.lang.reflect.Modifier.isFinal(modifier);
+            this.isAbstrat = java.lang.reflect.Modifier.isAbstract(modifier);
             this.methodName = getMethodName(describe);
             this.returnClass = getType(describe);
         }
@@ -223,13 +225,8 @@ public class ClassRadar {
         try{
             clz = Class.forName(className);
             superClz = Class.forName(superClassName);
-            boolean isAssignableFrom = superClz.isAssignableFrom(clz);
-            if (isAssignableFrom) {
-//                Log.d("btn", "-----------------------------");
-//                Log.d("btn", "clz:" + clz.getName());
-//                Log.d("btn", "superClz:" + superClz.getName());
-            }
-            return isAssignableFrom;
+            //boolean isAssignableFrom = superClz.isAssignableFrom(clz);
+            return clz.isInterface() == false && superClz.isAssignableFrom(clz);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -241,10 +238,7 @@ public class ClassRadar {
             Class<?> clz = Class.forName(className);
             RadarClassResult result = new RadarClassResult();
             result.className = className;
-            result.superClassName = clz.getSuperclass().getName();
-            if (result.superClassName == null) {
-                result.superClassName = "unkown";
-            }
+            result.superClassName = clz.getSuperclass() != null?clz.getSuperclass().getName():"unkown";
             List<String> implementsI = new ArrayList<>();
             try {
                 Class<?>[] interfaces = clz.getInterfaces();
@@ -429,11 +423,11 @@ public class ClassRadar {
             if (paramsLine.contains(",")){
                 String[] params = paramsLine.split(",");
                 for (int j = 0; j < params.length; j++){
-                    params[j] = convertToFridaType(params[j].trim());
+                    params[j] = params[j].trim();
                 }
                 return params;
             }else{
-                return new String[]{convertToFridaType(paramsLine)};
+                return new String[]{paramsLine};
             }
         }
         return new String[0];
