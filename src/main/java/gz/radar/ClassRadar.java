@@ -143,6 +143,11 @@ public class ClassRadar {
         public RadarField[] fields;
         public RadarConstructorMethod[] constructorMethods;
         public RadarMethod[] methods;
+        public boolean isStatic;
+        public boolean isFinally;
+        public boolean isEnum;
+        public boolean isAbstract;
+        public boolean isInterface;
 
         private void setFields(Collection<RadarField> fields) {
             this.fields = new RadarField[fields.size()];
@@ -240,6 +245,11 @@ public class ClassRadar {
             }
             Class<?> clz = Class.forName(className);
             RadarClassResult result = new RadarClassResult();
+            result.isAbstract = java.lang.reflect.Modifier.isAbstract(clz.getModifiers());
+            result.isStatic = java.lang.reflect.Modifier.isStatic(clz.getModifiers());
+            result.isFinally = java.lang.reflect.Modifier.isFinal(clz.getModifiers());
+            result.isEnum = clz.isEnum();
+            result.isInterface = clz.isInterface();
             result.className = className;
             result.superClassName = clz.getSuperclass() != null?clz.getSuperclass().getName():"unkown";
             List<String> implementsI = new ArrayList<>();
@@ -411,7 +421,7 @@ public class ClassRadar {
                 fridaType += "S";
                 break;
             default:
-                fridaType += type;
+                fridaType += "L"+type + ";";
                 break;
         }
         return fridaType;
