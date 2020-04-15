@@ -235,6 +235,9 @@ public class ClassRadar {
     
     public static RadarClassResult discoverClass(String className) {
         try {
+            if (className.startsWith("[")){
+                return null;
+            }
             Class<?> clz = Class.forName(className);
             RadarClassResult result = new RadarClassResult();
             result.className = className;
@@ -374,12 +377,13 @@ public class ClassRadar {
     }
 
     private static String convertToFridaType(String type){
+        if (!type.endsWith("[]")) {
+            return type;
+        }
         String fridaType = "";
-        if (type.startsWith("[]")) {
-            while (type.startsWith("[]")) {
-                fridaType += "[";
-                type = type.substring(2);
-            }
+        while (type.endsWith("[]")) {
+            fridaType += "[";
+            type = type.substring(0, type.length()-2);
         }
         switch (type){
             case "int":
@@ -423,11 +427,11 @@ public class ClassRadar {
             if (paramsLine.contains(",")){
                 String[] params = paramsLine.split(",");
                 for (int j = 0; j < params.length; j++){
-                    params[j] = params[j].trim();
+                    params[j] = convertToFridaType(params[j].trim());
                 }
                 return params;
             }else{
-                return new String[]{paramsLine};
+                return new String[]{convertToFridaType(paramsLine)};
             }
         }
         return new String[0];
