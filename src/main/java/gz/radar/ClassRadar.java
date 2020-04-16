@@ -1,7 +1,5 @@
 package gz.radar;
 
-import android.util.Log;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -76,6 +74,19 @@ public class ClassRadar {
             this.isAbstrat = java.lang.reflect.Modifier.isAbstract(modifier);
             this.methodName = getMethodName(describe);
             this.returnClass = getType(describe);
+        }
+
+        public boolean matchName(String testName) {
+            if (testName.equals(methodName) || testName.equals("?")){
+                return true;
+            }
+            Matcher matcher = Pattern.compile(testName).matcher(methodName);
+            while (matcher.find()){
+                if (methodName.equals(matcher.group())){
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
@@ -250,7 +261,7 @@ public class ClassRadar {
             result.isFinally = java.lang.reflect.Modifier.isFinal(clz.getModifiers());
             result.isEnum = clz.isEnum();
             result.isInterface = clz.isInterface();
-            result.className = className;
+            result.className = clz.getName();
             result.superClassName = clz.getSuperclass() != null?clz.getSuperclass().getName():"unkown";
             List<String> implementsI = new ArrayList<>();
             try {
