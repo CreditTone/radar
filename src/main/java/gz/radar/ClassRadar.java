@@ -1,5 +1,9 @@
 package gz.radar;
 
+import android.util.JsonReader;
+
+import org.json.JSONObject;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -159,6 +163,37 @@ public class ClassRadar {
         public boolean isEnum;
         public boolean isAbstract;
         public boolean isInterface;
+        public String  accessType;
+
+        public String describ() {
+            String describ = accessType;
+            if (!describ.isEmpty()) {
+                describ += " ";
+            }
+            if (isInterface) {
+                describ += "interface ";
+            }else if (isEnum) {
+                describ += "enum ";
+            }else{
+                describ += "class ";
+            }
+            describ += className;
+            if (superClassName != null && !superClassName.isEmpty() && !superClassName.equals("java.lang.Object")) {
+                describ += " extends " + superClassName;
+            }
+            if (isInterface && implementsInterfaces.length > 0) {
+                describ += " extends " + implementsInterfaces[0];
+            }else if (implementsInterfaces.length > 0){
+                describ += " implements ";
+                for (int i = 0; i < implementsInterfaces.length; i++) {
+                    describ += implementsInterfaces[i];
+                    if (i < implementsInterfaces.length - 1) {
+                        describ += ",";
+                    }
+                }
+            }
+            return describ;
+        }
 
         private void setFields(Collection<RadarField> fields) {
             this.fields = new RadarField[fields.size()];
@@ -193,6 +228,19 @@ public class ClassRadar {
         public boolean hasLocalNativeMethod() {
             for (RadarMethod radarMethod : methods) {
                 if (radarMethod.isNative && radarMethod.isLocal) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public boolean containsMethod(String methodNameReg) {
+            if (methodNameReg.isEmpty() || methodNameReg.equals("?") || methodNameReg.equals("_") || methodNameReg.equals(".*")) {
+                return true;
+            }
+            Pattern regex = Pattern.compile(methodNameReg);
+            for (RadarMethod radarMethod : methods) {
+                if (regex.matcher(radarMethod.methodName).find()) {
                     return true;
                 }
             }
@@ -256,94 +304,110 @@ public class ClassRadar {
             }
             Class<?> clz = Class.forName(className);
             RadarClassResult result = new RadarClassResult();
+            result.accessType = makeAccessType(clz.getModifiers());
             result.isAbstract = java.lang.reflect.Modifier.isAbstract(clz.getModifiers());
             result.isStatic = java.lang.reflect.Modifier.isStatic(clz.getModifiers());
             result.isFinally = java.lang.reflect.Modifier.isFinal(clz.getModifiers());
             result.isEnum = clz.isEnum();
             result.isInterface = clz.isInterface();
             result.className = clz.getName();
-            result.superClassName = clz.getSuperclass() != null?clz.getSuperclass().getName():"unkown";
-            List<String> implementsI = new ArrayList<>();
-            try {
-                Class<?>[] interfaces = clz.getInterfaces();
-                for (int i = 0; interfaces != null && i < interfaces.length; i++) {
-                    implementsI.add(interfaces[i].getName());
-                }
-            }catch (Exception e){}
-            result.implementsInterfaces = implementsI.toArray(new String[implementsI.size()]);
-            Set<RadarField> radarFields = new HashSet<>();
-            java.lang.reflect.Field[] declaredFields = clz.getDeclaredFields();
-            if (declaredFields != null){
-                for (int i = 0; i < declaredFields.length; i++) {
-                    RadarField radarField = new RadarField(declaredFields[i]);
-                    radarField.isLocal = true;
-                    radarFields.add(radarField);
-                }
+            boolean isClass = !result.isEnum && !result.isInterface;
+            if (isClass) {
+                result.superClassName = clz.getSuperclass() != null?clz.getSuperclass().getName():"unkown";
+            }else{
+                result.superClassName = "";
             }
-            java.lang.reflect.Field[] fields = clz.getFields();
-            if (fields != null){
-                for (int i = 0; i < fields.length; i++) {
-                    RadarField radarField = new RadarField(fields[i]);
-                    radarField.isLocal = false;
-                    radarFields.add(radarField);
+            List<String> implementsI = new ArrayList<>();
+            if (!result.isEnum) {
+                try {
+                    Class<?>[] interfaces = clz.getInterfaces();
+                    for (int i = 0; interfaces != null && i < interfaces.length; i++) {
+                        implementsI.add(interfaces[i].getName());
+                    }
+                }catch (Exception e){}
+
+            }
+            result.implementsInterfaces = implementsI.toArray(new String[implementsI.size()]);
+
+            Set<RadarField> radarFields = new HashSet<>();
+            if (isClass) {
+                java.lang.reflect.Field[] declaredFields = clz.getDeclaredFields();
+                if (declaredFields != null){
+                    for (int i = 0; i < declaredFields.length; i++) {
+                        RadarField radarField = new RadarField(declaredFields[i]);
+                        radarField.isLocal = true;
+                        radarFields.add(radarField);
+                    }
+                }
+                java.lang.reflect.Field[] fields = clz.getFields();
+                if (fields != null){
+                    for (int i = 0; i < fields.length; i++) {
+                        RadarField radarField = new RadarField(fields[i]);
+                        radarField.isLocal = false;
+                        radarFields.add(radarField);
+                    }
                 }
             }
             result.setFields(radarFields);
             //构造方法
             Set<RadarConstructorMethod> radarConstructorMethods = new HashSet<RadarConstructorMethod>();
-            Constructor<?>[] constructors = clz.getDeclaredConstructors();
-            if (constructors != null) {
-                for (int i = 0; i < constructors.length; i++) {
-                    RadarConstructorMethod raderConstructorMethod = new RadarConstructorMethod(constructors[i].getModifiers(), constructors[i].toString());
-                    raderConstructorMethod.isLocal = true;
-                    radarConstructorMethods.add(raderConstructorMethod);
+            if (isClass) {
+                Constructor<?>[] constructors = clz.getDeclaredConstructors();
+                if (constructors != null) {
+                    for (int i = 0; i < constructors.length; i++) {
+                        RadarConstructorMethod raderConstructorMethod = new RadarConstructorMethod(constructors[i].getModifiers(), constructors[i].toString());
+                        raderConstructorMethod.isLocal = true;
+                        radarConstructorMethods.add(raderConstructorMethod);
+                    }
                 }
-            }
-            constructors = clz.getConstructors();
-            if (constructors != null){
-                for (int i = 0; i < constructors.length; i++) {
-                    RadarConstructorMethod raderConstructorMethod = new RadarConstructorMethod(constructors[i].getModifiers(), constructors[i].toString());
-                    boolean needToSkip = false;
-                    for (RadarConstructorMethod raderConstructorMethodAdded : radarConstructorMethods) {
-                        if (raderConstructorMethodAdded.isLocal && raderConstructorMethodAdded.equals(raderConstructorMethod)) {
-                            raderConstructorMethod.isOverWrite = true;
-                            needToSkip = true;
-                            break;
+                constructors = clz.getConstructors();
+                if (constructors != null){
+                    for (int i = 0; i < constructors.length; i++) {
+                        RadarConstructorMethod raderConstructorMethod = new RadarConstructorMethod(constructors[i].getModifiers(), constructors[i].toString());
+                        boolean needToSkip = false;
+                        for (RadarConstructorMethod raderConstructorMethodAdded : radarConstructorMethods) {
+                            if (raderConstructorMethodAdded.isLocal && raderConstructorMethodAdded.equals(raderConstructorMethod)) {
+                                raderConstructorMethod.isOverWrite = true;
+                                needToSkip = true;
+                                break;
+                            }
                         }
+                        if (needToSkip) {
+                            continue;
+                        }
+                        radarConstructorMethods.add(raderConstructorMethod);
                     }
-                    if (needToSkip) {
-                        continue;
-                    }
-                    radarConstructorMethods.add(raderConstructorMethod);
                 }
             }
             result.setRadarConstructorMethods(radarConstructorMethods);
             //方法
             Set<RadarMethod> radarMethods = new HashSet<RadarMethod>();
-            Method[] methods = clz.getDeclaredMethods();
-            if (methods != null){
-                for (int i = 0; i < methods.length; i++) {
-                    RadarMethod radarMethod = new RadarMethod(methods[i].getModifiers(), methods[i].toString());
-                    radarMethod.isLocal = true;
-                    radarMethods.add(radarMethod);
+            if (isClass) {
+                Method[] methods = clz.getDeclaredMethods();
+                if (methods != null){
+                    for (int i = 0; i < methods.length; i++) {
+                        RadarMethod radarMethod = new RadarMethod(methods[i].getModifiers(), methods[i].toString());
+                        radarMethod.isLocal = true;
+                        radarMethods.add(radarMethod);
+                    }
                 }
-            }
-            methods = clz.getMethods();
-            if (methods != null){
-                for (int i = 0; i < methods.length; i++) {
-                    RadarMethod radarMethod = new RadarMethod(methods[i].getModifiers(), methods[i].toString());
-                    boolean needToSkip = false;
-                    for (RadarMethod radarMethodAdded : radarMethods) {
-                        if (radarMethodAdded.isLocal && !radarMethodAdded.isNative && radarMethodAdded.equals(radarMethod)) {
-                            radarMethodAdded.isOverWrite = true;
-                            needToSkip = true;
-                            break;
+                methods = clz.getMethods();
+                if (methods != null){
+                    for (int i = 0; i < methods.length; i++) {
+                        RadarMethod radarMethod = new RadarMethod(methods[i].getModifiers(), methods[i].toString());
+                        boolean needToSkip = false;
+                        for (RadarMethod radarMethodAdded : radarMethods) {
+                            if (radarMethodAdded.isLocal && !radarMethodAdded.isNative && radarMethodAdded.equals(radarMethod)) {
+                                radarMethodAdded.isOverWrite = true;
+                                needToSkip = true;
+                                break;
+                            }
                         }
+                        if (needToSkip) {
+                            continue;
+                        }
+                        radarMethods.add(radarMethod);
                     }
-                    if (needToSkip) {
-                        continue;
-                    }
-                    radarMethods.add(radarMethod);
                 }
             }
             result.setRadarMethods(radarMethods);
@@ -483,5 +547,6 @@ public class ClassRadar {
         }
         return false;
     }
+
 
 }
