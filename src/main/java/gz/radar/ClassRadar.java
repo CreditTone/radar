@@ -113,6 +113,7 @@ public class ClassRadar {
     }
 
     public static class RadarField {
+        public java.lang.reflect.Field field;
         public String accessType;
         public String fieldClass;
         public String fieldName;
@@ -122,6 +123,7 @@ public class ClassRadar {
         public String describe;
 
         public RadarField(java.lang.reflect.Field field) {
+            this.field = field;
             this.describe = field.toString();
             this.accessType = makeAccessType(field.getModifiers());
             this.isStatic = java.lang.reflect.Modifier.isStatic(field.getModifiers());
