@@ -1,1 +1,1 @@
-/Users/stephen/Library/Android/sdk/build-tools/29.0.3/dx --dex --output=libs/radar.dex libs/radar.jar
+dx --dex --output=libs/radar.dex libs/radar.jar
