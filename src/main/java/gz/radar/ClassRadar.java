@@ -295,8 +295,9 @@ public class ClassRadar {
             return clz.isInterface() == false && superClz.isAssignableFrom(clz);
         }catch (Exception e){
             e.printStackTrace();
+            return false;
         }
-        return lookingSuperClass(clz, superClassName);
+        //return lookingSuperClass(clz, superClassName);
     }
     
     public static RadarClassResult discoverClass(String className) {
