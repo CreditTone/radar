@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-sr/values-sr.xml",
+            "outputFile": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-sr/values-sr.xml",
             "map": [
                 {
                     "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/1cd7eff88f5e86d0249af2958bf465f0/core-1.1.0/res/values-sr/values-sr.xml",
@@ -33,7 +33,7 @@
             ]
         },
         {
-            "outputFile": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/values-sr/values-sr.xml",
+            "outputFile": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/values-sr/values-sr.xml",
             "map": [
                 {
                     "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/1cd7eff88f5e86d0249af2958bf465f0/core-1.1.0/res/values-sr/values-sr.xml",

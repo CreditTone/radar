@@ -475,28 +475,28 @@ public class ClassRadar {
         }
         switch (type){
             case "int":
-                fridaType += "int;";
+                fridaType += "I";
                 break;
             case "boolean":
-                fridaType += "boolean;";
+                fridaType += "Z";
                 break;
             case "byte":
-                fridaType += "byte;";
+                fridaType += "B";
                 break;
             case "char":
-                fridaType += "char;";
+                fridaType += "C";
                 break;
             case "double":
-                fridaType += "double;";
+                fridaType += "D";
                 break;
             case "float":
-                fridaType += "float;";
+                fridaType += "F";
                 break;
             case "long":
-                fridaType += "long;";
+                fridaType += "J";
                 break;
             case "short":
-                fridaType += "short;";
+                fridaType += "S";
                 break;
             default:
                 fridaType += "L"+type + ";";

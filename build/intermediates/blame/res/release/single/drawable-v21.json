@@ -1,26 +1,26 @@
 [
     {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/drawable-v21/abc_edit_text_material.xml",
-        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/drawable-v21/abc_edit_text_material.xml"
-    },
-    {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/drawable-v21/abc_dialog_material_background.xml",
-        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/drawable-v21/abc_dialog_material_background.xml"
-    },
-    {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/drawable-v21/notification_action_background.xml",
-        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/1cd7eff88f5e86d0249af2958bf465f0/core-1.1.0/res/drawable-v21/notification_action_background.xml"
-    },
-    {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/drawable-v21/abc_list_divider_material.xml",
-        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/drawable-v21/abc_list_divider_material.xml"
-    },
-    {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/drawable-v21/abc_action_bar_item_background_material.xml",
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/drawable-v21/abc_action_bar_item_background_material.xml",
         "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/drawable-v21/abc_action_bar_item_background_material.xml"
     },
     {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/drawable-v21/abc_btn_colored_material.xml",
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/drawable-v21/abc_edit_text_material.xml",
+        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/drawable-v21/abc_edit_text_material.xml"
+    },
+    {
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/drawable-v21/notification_action_background.xml",
+        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/1cd7eff88f5e86d0249af2958bf465f0/core-1.1.0/res/drawable-v21/notification_action_background.xml"
+    },
+    {
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/drawable-v21/abc_btn_colored_material.xml",
         "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/drawable-v21/abc_btn_colored_material.xml"
+    },
+    {
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/drawable-v21/abc_dialog_material_background.xml",
+        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/drawable-v21/abc_dialog_material_background.xml"
+    },
+    {
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/drawable-v21/abc_list_divider_material.xml",
+        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/drawable-v21/abc_list_divider_material.xml"
     }
 ]

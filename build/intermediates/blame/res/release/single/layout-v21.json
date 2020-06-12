@@ -1,18 +1,18 @@
 [
     {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/layout-v21/notification_template_icon_group.xml",
-        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/1cd7eff88f5e86d0249af2958bf465f0/core-1.1.0/res/layout-v21/notification_template_icon_group.xml"
-    },
-    {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/layout-v21/notification_template_custom_big.xml",
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/layout-v21/notification_template_custom_big.xml",
         "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/1cd7eff88f5e86d0249af2958bf465f0/core-1.1.0/res/layout-v21/notification_template_custom_big.xml"
     },
     {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/layout-v21/notification_action_tombstone.xml",
-        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/1cd7eff88f5e86d0249af2958bf465f0/core-1.1.0/res/layout-v21/notification_action_tombstone.xml"
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/layout-v21/notification_template_icon_group.xml",
+        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/1cd7eff88f5e86d0249af2958bf465f0/core-1.1.0/res/layout-v21/notification_template_icon_group.xml"
     },
     {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/layout-v21/notification_action.xml",
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/layout-v21/notification_action.xml",
         "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/1cd7eff88f5e86d0249af2958bf465f0/core-1.1.0/res/layout-v21/notification_action.xml"
+    },
+    {
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/layout-v21/notification_action_tombstone.xml",
+        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/1cd7eff88f5e86d0249af2958bf465f0/core-1.1.0/res/layout-v21/notification_action_tombstone.xml"
     }
 ]

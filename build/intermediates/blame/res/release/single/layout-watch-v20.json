@@ -1,10 +1,10 @@
 [
     {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/layout-watch-v20/abc_alert_dialog_title_material.xml",
-        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/layout-watch-v20/abc_alert_dialog_title_material.xml"
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/layout-watch-v20/abc_alert_dialog_button_bar_material.xml",
+        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/layout-watch-v20/abc_alert_dialog_button_bar_material.xml"
     },
     {
-        "merged": "/Users/stephen/hacker/MyApplication2/radar/build/intermediates/res/merged/release/layout-watch-v20/abc_alert_dialog_button_bar_material.xml",
-        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/layout-watch-v20/abc_alert_dialog_button_bar_material.xml"
+        "merged": "/Users/stephen/hacker/MyApplication/radar/build/intermediates/res/merged/release/layout-watch-v20/abc_alert_dialog_title_material.xml",
+        "source": "/Users/stephen/.gradle/caches/transforms-2/files-2.1/f7fa931c10060cb31b4ececcd856b65d/appcompat-1.1.0/res/layout-watch-v20/abc_alert_dialog_title_material.xml"
     }
 ]
