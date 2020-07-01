@@ -1,36 +1,77 @@
 package gz.radar;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Application;
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Android {
 
-    public static String getTopActivity(Context ctx) {
-        try{
-           ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
-           return activityManager.getRunningTasks(1).get(0).topActivity.getClassName();
-        }catch (Exception e){
-            e.printStackTrace();
+    public static ActivityInfo[] getActivityInfos() throws Exception {
+        ActivityInfo[] activityInfos = null;
+        List<ActivityInfo> results = new ArrayList<>();
+        ActivityInfo topActivity = null;
+        Class activityThreadClass = Class.forName("android.app.ActivityThread");
+        Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
+        Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
+        activitiesField.setAccessible(true);
+        Map activities = (Map) activitiesField.get(activityThread);
+        for (Object activityClientRecord : activities.values()) {
+            ActivityInfo activityInfo = new ActivityInfo();
+            Class activityClietnRecordClass = activityClientRecord.getClass();
+            Field pausedField = activityClietnRecordClass.getDeclaredField("paused");
+            pausedField.setAccessible(true);
+            Field activityField = activityClietnRecordClass.getDeclaredField("activity");
+            activityField.setAccessible(true);
+            Field stoppedField = activityClietnRecordClass.getDeclaredField("stopped");
+            stoppedField.setAccessible(true);
+            Activity activity = (Activity) activityField.get(activityClientRecord);
+            activityInfo.setActivity(activity);
+            activityInfo.setName(activity.getClass().getName());
+            activityInfo.setPaused(pausedField.getBoolean(activityClientRecord));
+            activityInfo.setOnTop(activityInfo.isPaused());
+            activityInfo.setTitle(activity.getTitle().toString());
+            activityInfo.setStopped(stoppedField.getBoolean(activityClientRecord));
+            if (activityInfo.isOnTop()) {
+                View currentFocusView = activity.getCurrentFocus();
+                if (currentFocusView != null) {
+                    activityInfo.setCurrentFocusView(currentFocusView.getClass().getName());
+                }
+                topActivity = activityInfo;
+            }else{
+                results.add(activityInfo);
+            }
         }
-        return "error";
+        int length = results.size() + (topActivity != null? 1 : 0);
+        activityInfos = new ActivityInfo[length];
+        if (length == 0) {
+            return activityInfos;
+        }
+        int index = 0;
+        if (topActivity != null) {
+            activityInfos[index] = topActivity;
+            index ++;
+        }
+        for (ActivityInfo item : results) {
+            activityInfos[index] = item;
+            index ++;
+        }
+        return activityInfos;
     }
 
-    public static Activity getActivity(Application application,String activityClz) {
-        try{
+    public static Activity getActivity(Application application, String activityClz) {
+        try {
             javax.crypto.Cipher cipher = javax.crypto.Cipher.getInstance("");
-            
+
             //需要用到application.registerActivityLifecycleCallbacks，修改系统前注入到逻辑。所以必须系统源码配合修改
             //application.registerActivityLifecycleCallbacks();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -54,7 +95,7 @@ public class Android {
         return allchildren;
     }
 
-    public static View findViewById(Object viewContainer,int id) {
+    public static View findViewById(Object viewContainer, int id) {
         if (viewContainer == null) {
             return null;
         }
@@ -62,8 +103,8 @@ public class Android {
         if (viewContainer instanceof Activity) {
             Activity activity = (Activity) viewContainer;
             view = activity.findViewById(id);
-        }else if (viewContainer instanceof View) {
-            view = ((View)viewContainer).findViewById(id);
+        } else if (viewContainer instanceof View) {
+            view = ((View) viewContainer).findViewById(id);
         }
         return view;
     }
@@ -83,12 +124,12 @@ public class Android {
     public static String getViewText(Object viewContainer, int id) {
         View view = findViewById(viewContainer, id);
         if (view == null) {
-            return "false:Not found the View by id:"+id;
+            return "false:Not found the View by id:" + id;
         }
         if (view instanceof TextView) {
-            return ((TextView)view).getText().toString();
+            return ((TextView) view).getText().toString();
         }
-        return "false:"+view.getClass().getName() +" can't cast to TextView.";
+        return "false:" + view.getClass().getName() + " can't cast to TextView.";
     }
 
 
