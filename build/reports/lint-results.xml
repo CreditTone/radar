@@ -2,6 +2,60 @@
 <issues format="5" by="lint 3.6.1">
 
     <issue
+        id="DiscouragedPrivateApi"
+        severity="Warning"
+        message="Reflective access to currentApplication, which is not part of the public SDK and therefore likely to change in future Android releases"
+        category="Correctness"
+        priority="6"
+        summary="Using Discouraged Private API"
+        explanation="Usage of restricted non-SDK interface may throw an exception at runtime. Accessing non-SDK methods or fields through reflection has a high likelihood to break your app between versions, and is being restricted to facilitate future app compatibility."
+        url="https://developer.android.com/preview/restrictions-non-sdk-interfaces"
+        urls="https://developer.android.com/preview/restrictions-non-sdk-interfaces"
+        errorLine1="        Method currentApplication = activityThread.getDeclaredMethod(&quot;currentApplication&quot;);"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/stephen/hacker/MyApplication/radar/src/main/java/gz/radar/Android.java"
+            line="23"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="DiscouragedPrivateApi"
+        severity="Warning"
+        message="Reflective access to currentActivityThread, which is not part of the public SDK and therefore likely to change in future Android releases"
+        category="Correctness"
+        priority="6"
+        summary="Using Discouraged Private API"
+        explanation="Usage of restricted non-SDK interface may throw an exception at runtime. Accessing non-SDK methods or fields through reflection has a high likelihood to break your app between versions, and is being restricted to facilitate future app compatibility."
+        url="https://developer.android.com/preview/restrictions-non-sdk-interfaces"
+        urls="https://developer.android.com/preview/restrictions-non-sdk-interfaces"
+        errorLine1="        Method currentActivityThread = activityThread.getDeclaredMethod(&quot;currentActivityThread&quot;);"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/stephen/hacker/MyApplication/radar/src/main/java/gz/radar/Android.java"
+            line="24"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="PrivateApi"
+        severity="Warning"
+        message="Accessing internal APIs via reflection is not supported and may not work on all devices or in the future"
+        category="Correctness"
+        priority="6"
+        summary="Using Private APIs"
+        explanation="Using reflection to access hidden/private Android APIs is not safe; it will often not work on devices from other vendors, and it may suddenly stop working (if the API is removed) or crash spectacularly (if the API behavior changes, since there are no guarantees for compatibility)."
+        url="https://developer.android.com/preview/restrictions-non-sdk-interfaces"
+        urls="https://developer.android.com/preview/restrictions-non-sdk-interfaces"
+        errorLine1="        Class&lt;?> activityThread = Class.forName(&quot;android.app.ActivityThread&quot;);"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/stephen/hacker/MyApplication/radar/src/main/java/gz/radar/Android.java"
+            line="22"
+            column="35"/>
+    </issue>
+
+    <issue
         id="PrivateApi"
         severity="Warning"
         message="Accessing internal APIs via reflection is not supported and may not work on all devices or in the future"
@@ -15,7 +69,7 @@
         errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/Users/stephen/hacker/MyApplication/radar/src/main/java/gz/radar/Android.java"
-            line="20"
+            line="49"
             column="37"/>
     </issue>
 

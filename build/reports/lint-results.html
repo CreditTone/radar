@@ -173,17 +173,18 @@ document.getElementById(id).style.display = 'none';
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
-      <span class="mdl-layout-title">Lint Report: 1 warning</span>
+      <span class="mdl-layout-title">Lint Report: 4 warnings</span>
       <div class="mdl-layout-spacer"></div>
       <nav class="mdl-navigation mdl-layout--large-screen-only">
-Check performed at Wed Jul 01 14:51:45 CST 2020      </nav>
+Check performed at Thu Jul 02 15:07:11 CST 2020      </nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
     <span class="mdl-layout-title">Issue Types</span>
     <nav class="mdl-navigation">
       <a class="mdl-navigation__link" href="#overview"><i class="material-icons">dashboard</i>Overview</a>
-      <a class="mdl-navigation__link" href="#PrivateApi"><i class="material-icons warning-icon">warning</i>Using Private APIs (1)</a>
+      <a class="mdl-navigation__link" href="#DiscouragedPrivateApi"><i class="material-icons warning-icon">warning</i>Using Discouraged Private API (2)</a>
+      <a class="mdl-navigation__link" href="#PrivateApi"><i class="material-icons warning-icon">warning</i>Using Private APIs (2)</a>
     </nav>
   </div>
   <main class="mdl-layout__content">
@@ -199,7 +200,10 @@ Check performed at Wed Jul 01 14:51:45 CST 2020      </nav>
 <tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Correctness">Correctness</a>
 </td></tr>
 <tr>
-<td class="countColumn">1</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<td class="countColumn">2</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<a href="#DiscouragedPrivateApi">DiscouragedPrivateApi</a>: Using Discouraged Private API</td></tr>
+<tr>
+<td class="countColumn">2</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#PrivateApi">PrivateApi</a>: Using Private APIs</td></tr>
 <tr><td></td><td class="categoryColumn"><a href="#MissingIssues">Disabled Checks (38)</a>
 </td></tr></table>
@@ -210,7 +214,63 @@ Dismiss</button>            </div>
             </div>
           </section>
 <a name="Correctness"></a>
-<a name="PrivateApi"></a>
+<a name="DiscouragedPrivateApi"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="DiscouragedPrivateApiCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Using Discouraged Private API</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<div class="issue">
+<div class="warningslist">
+<span class="location"><a href="../../src/main/java/gz/radar/Android.java">../../src/main/java/gz/radar/Android.java</a>:23</span>: <span class="message">Reflective access to currentApplication, which is not part of the public SDK and therefore likely to change in future Android releases</span><br /><pre class="errorlines">
+<span class="lineno">  20 </span>
+<span class="lineno">  21 </span>  <span class="keyword">public</span> <span class="keyword">static</span> Application getApplication() <span class="keyword">throws</span> Exception {
+<span class="lineno">  22 </span>      Class&lt;?> activityThread = Class.forName(<span class="string">"android.app.ActivityThread"</span>);
+<span class="caretline"><span class="lineno">  23 </span>      Method currentApplication = <span class="warning">activityThread.getDeclaredMethod(<span class="string">"currentApplication"</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  24 </span>      Method currentActivityThread = activityThread.getDeclaredMethod(<span class="string">"currentActivityThread"</span>);
+<span class="lineno">  25 </span>      Object current = currentActivityThread.invoke((Object)<span class="keyword">null</span>);
+<span class="lineno">  26 </span>      Object app = currentApplication.invoke(current);
+</pre>
+
+<span class="location"><a href="../../src/main/java/gz/radar/Android.java">../../src/main/java/gz/radar/Android.java</a>:24</span>: <span class="message">Reflective access to currentActivityThread, which is not part of the public SDK and therefore likely to change in future Android releases</span><br /><pre class="errorlines">
+<span class="lineno">  21 </span>  <span class="keyword">public</span> <span class="keyword">static</span> Application getApplication() <span class="keyword">throws</span> Exception {
+<span class="lineno">  22 </span>      Class&lt;?> activityThread = Class.forName(<span class="string">"android.app.ActivityThread"</span>);
+<span class="lineno">  23 </span>      Method currentApplication = activityThread.getDeclaredMethod(<span class="string">"currentApplication"</span>);
+<span class="caretline"><span class="lineno">  24 </span>      Method currentActivityThread = <span class="warning">activityThread.getDeclaredMethod(<span class="string">"currentActivityThread"</span>)</span>;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  25 </span>      Object current = currentActivityThread.invoke((Object)<span class="keyword">null</span>);
+<span class="lineno">  26 </span>      Object app = currentApplication.invoke(current);
+<span class="lineno">  27 </span>      <span class="keyword">return</span> (Application)app;
+</pre>
+
+</div>
+<div class="metadata"><div class="explanation" id="explanationDiscouragedPrivateApi" style="display: none;">
+Usage of restricted non-SDK interface may throw an exception at runtime. Accessing non-SDK methods or fields through reflection has a high likelihood to break your app between versions, and is being restricted to facilitate future app compatibility.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/preview/restrictions-non-sdk-interfaces">https://developer.android.com/preview/restrictions-non-sdk-interfaces</a>
+</div>To suppress this error, use the issue id "DiscouragedPrivateApi" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+<br/></div>
+</div>
+</div>
+<div class="chips">
+<span class="mdl-chip">
+    <span class="mdl-chip__text">DiscouragedPrivateApi</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Correctness</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Warning</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 6/10</span>
+</span>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationDiscouragedPrivateApiLink" onclick="reveal('explanationDiscouragedPrivateApi');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="DiscouragedPrivateApiCardLink" onclick="hideid('DiscouragedPrivateApiCard');">
+Dismiss</button>            </div>
+            </div>
+          </section><a name="PrivateApi"></a>
 <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="PrivateApiCard" style="display: block;">
             <div class="mdl-card mdl-cell mdl-cell--12-col">
   <div class="mdl-card__title">
@@ -219,14 +279,24 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../src/main/java/gz/radar/Android.java">../../src/main/java/gz/radar/Android.java</a>:20</span>: <span class="message">Accessing internal APIs via reflection is not supported and may not work on all devices or in the future</span><br /><pre class="errorlines">
-<span class="lineno">  17 </span>  ActivityInfo[] activityInfos = <span class="keyword">null</span>;
-<span class="lineno">  18 </span>  List&lt;ActivityInfo> results = <span class="keyword">new</span> ArrayList&lt;>();
-<span class="lineno">  19 </span>  ActivityInfo topActivity = <span class="keyword">null</span>;
-<span class="caretline"><span class="lineno">  20 </span>  Class activityThreadClass = <span class="warning">Class.forName(<span class="string">"android.app.ActivityThread"</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  21 </span>  Object activityThread = activityThreadClass.getMethod(<span class="string">"currentActivityThread"</span>).invoke(<span class="keyword">null</span>);
-<span class="lineno">  22 </span>  Field activitiesField = activityThreadClass.getDeclaredField(<span class="string">"mActivities"</span>);
-<span class="lineno">  23 </span>  activitiesField.setAccessible(<span class="keyword">true</span>);
+<span class="location"><a href="../../src/main/java/gz/radar/Android.java">../../src/main/java/gz/radar/Android.java</a>:22</span>: <span class="message">Accessing internal APIs via reflection is not supported and may not work on all devices or in the future</span><br /><pre class="errorlines">
+<span class="lineno">  19 </span><span class="keyword">public</span> <span class="keyword">class</span> Android {
+<span class="lineno">  20 </span>
+<span class="lineno">  21 </span>    <span class="keyword">public</span> <span class="keyword">static</span> Application getApplication() <span class="keyword">throws</span> Exception {
+<span class="caretline"><span class="lineno">  22 </span>        Class&lt;?> activityThread = <span class="warning">Class.forName(<span class="string">"android.app.ActivityThread"</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  23 </span>        Method currentApplication = activityThread.getDeclaredMethod(<span class="string">"currentApplication"</span>);
+<span class="lineno">  24 </span>        Method currentActivityThread = activityThread.getDeclaredMethod(<span class="string">"currentActivityThread"</span>);
+<span class="lineno">  25 </span>        Object current = currentActivityThread.invoke((Object)<span class="keyword">null</span>);
+</pre>
+
+<span class="location"><a href="../../src/main/java/gz/radar/Android.java">../../src/main/java/gz/radar/Android.java</a>:49</span>: <span class="message">Accessing internal APIs via reflection is not supported and may not work on all devices or in the future</span><br /><pre class="errorlines">
+<span class="lineno">  46 </span>  ActivityInfo[] activityInfos = <span class="keyword">null</span>;
+<span class="lineno">  47 </span>  List&lt;ActivityInfo> results = <span class="keyword">new</span> ArrayList&lt;>();
+<span class="lineno">  48 </span>  ActivityInfo topActivity = <span class="keyword">null</span>;
+<span class="caretline"><span class="lineno">  49 </span>  Class activityThreadClass = <span class="warning">Class.forName(<span class="string">"android.app.ActivityThread"</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  50 </span>  Object activityThread = activityThreadClass.getMethod(<span class="string">"currentActivityThread"</span>).invoke(<span class="keyword">null</span>);
+<span class="lineno">  51 </span>  Field activitiesField = activityThreadClass.getDeclaredField(<span class="string">"mActivities"</span>);
+<span class="lineno">  52 </span>  activitiesField.setAccessible(<span class="keyword">true</span>);
 </pre>
 
 </div>

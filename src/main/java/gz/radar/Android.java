@@ -2,16 +2,45 @@ package gz.radar;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class Android {
+
+    public static Application getApplication() throws Exception {
+        Class<?> activityThread = Class.forName("android.app.ActivityThread");
+        Method currentApplication = activityThread.getDeclaredMethod("currentApplication");
+        Method currentActivityThread = activityThread.getDeclaredMethod("currentActivityThread");
+        Object current = currentActivityThread.invoke((Object)null);
+        Object app = currentApplication.invoke(current);
+        return (Application)app;
+    }
+
+    public static String getVersionName() throws Exception {
+        Application context = getApplication();
+        //获取包管理器
+        PackageManager pm = context.getPackageManager();
+        //获取包信息
+        try {
+            PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), 0);
+            //返回版本号
+            return packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "unknown";
+    }
 
     public static ActivityInfo[] getActivityInfos() throws Exception {
         ActivityInfo[] activityInfos = null;
@@ -34,7 +63,7 @@ public class Android {
             Activity activity = (Activity) activityField.get(activityClientRecord);
             activityInfo.setActivity(activity);
             activityInfo.setName(activity.getClass().getName());
-            activityInfo.setPaused(pausedField.getBoolean(activityClientRecord));
+            activityInfo.setPaused(!pausedField.getBoolean(activityClientRecord));
             activityInfo.setOnTop(activityInfo.isPaused());
             activityInfo.setTitle(activity.getTitle().toString());
             activityInfo.setStopped(stoppedField.getBoolean(activityClientRecord));
